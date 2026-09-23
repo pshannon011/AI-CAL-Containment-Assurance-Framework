@@ -24,6 +24,8 @@ v1.0 — September 2026
 
 Initial public release.
 
+github link: https://github.com/pshannon011/AI-CAL-Containment-Assurance-Framework
+
 License
 
 © 2026 Patrick Shannon
