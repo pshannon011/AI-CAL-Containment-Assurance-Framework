@@ -18,6 +18,8 @@ Document: `AI-CAL\_Agent\_Containment\_Framework\_v1.0\_2026-09.pdf`
 
 SHA-256:d88e9eae0cac725321fa85b8591c2d3c34307e7c6570ffca5900ea0394221a92
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22925685.svg)](https://doi.org/10.5281/zenodo.22925685)
+
 Version History
 
 v1.0 — September 2026
