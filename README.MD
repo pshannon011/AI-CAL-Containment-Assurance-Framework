@@ -28,6 +28,12 @@ Initial public release.
 
 github link: https://github.com/pshannon011/AI-CAL-Containment-Assurance-Framework
 
+Companion diagram for the AI-CAL framework, including the end-to-end flow.
+Added: 2026-10-01
+File: 'AI-CAL_On_Prem_Layout_diagram_v1.0_2026_10_01.pdf'
+SHA-256: c56af580ecb9a0bda3567c6a5e7341106b14a3f89adae9ff96d5e9d6c4a0cfc0
+
+
 License
 
 © 2026 Patrick Shannon
