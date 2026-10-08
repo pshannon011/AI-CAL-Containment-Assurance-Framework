@@ -37,9 +37,18 @@ Github link: https://github.com/pshannon011/AI-CAL-Containment-Assurance-Framewo
 
 **Release Date:** October 2026  
 
-**Companion Diagram:** `AI-CAL_On_Prem_Layout_diagram_v1.0_2026_10_01.pdf`  
+**Companion Visio Diagram:** `AI-CAL_On_Prem_Layout_diagram_v1.0_2026_10_01.pdf`  
 
 **Hash integrity SHA-256:** `c56af580ecb9a0bda3567c6a5e7341106b14a3f89adae9ff96d5e9d6c4a0cfc0`
+
+--------------------------
+**Current Release:** Version v1.0 Initial public release.
+
+**Release Date:** October 2026  
+
+**Companion PowerPoint Presentation Diagram:** `AI_containment_diagram_presentation_v1.0_2026_10_08.pdf`
+
+**Hash integrity SHA-256:** `55cb65caac22b4114509793eaf0b3899ac170d69605a54fb54d00e231af33a69`
 
 --------------------------
 
