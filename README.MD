@@ -46,11 +46,21 @@ Github link: https://github.com/pshannon011/AI-CAL-Containment-Assurance-Framewo
 
 **Release Date:** October 2026  
 
-**Companion PowerPoint Presentation Diagram:** `AI_CAL_Containment_Diagram_Presentation_v1.0_2026_10_08.pdf`
+**Companion Diagram walkthrough PowerPoint Presentation:** `AI_CAL_Containment_Diagram_Presentation_v1.0_2026_10_08.pdf`
 
 **Hash integrity SHA-256:** `55cb65caac22b4114509793eaf0b3899ac170d69605a54fb54d00e231af33a69`
 
 --------------------------
+**Current Release:** Version v1.0 Initial public release.
+
+**Release Date:** November 2026  
+
+**AI-CAL Controls Slide deck companion presentation:** `AI-CAL_controls_presentation_v1.0_2026-11.pdf`
+
+**Hash integrity SHA-256:** `cb4f67ed4f85272935077f8c39af9777e560b9db3b7562e72ae06f1aacb16d00`
+
+--------------------------
+
 
 ##License
 
@@ -74,6 +84,7 @@ Future revisions will be published as separate versioned releases. Previous rele
 * **Status:** This design is under active development and requires formal peer review and extensive validation testing prior to production deployment.
 * **Agent Message Request Canonical JSON Schema:** The precise structural specifications and canonical JSON definitions are currently undergoing active design and refinement. Input from AppSec and integration engineers is welcomed during the formal peer-review phase.
 
+The AI-CAL v2.0 framework will be released soon and is currently under review. 
 
 ## 👨‍💻 About the Author
 
