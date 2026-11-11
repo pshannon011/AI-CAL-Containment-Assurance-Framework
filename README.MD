@@ -1,106 +1,58 @@
-# Artificial Intelligence Containment Assurance Levels (AI-CAL)
-## Hardware-Enforced Deterministic Containment for Autonomous Agents
+# AI Containment Assurance Levels (AI-CAL)
 
-### 📌 Overview
-Traditional AI security relies heavily on behavioral guardrails (alignment) and logical cloud sandboxes (IAM/network policies). However, advanced autonomous agents consistently demonstrate the ability to exploit logical layers, manipulate proxy caches, and break virtual containment. 
+AI-CAL is an **AI agent containment framework and security reference architecture** for autonomous AI systems. It helps architects choose a containment level for a workload, design boundaries that limit what an agent can reach or do, and identify the evidence needed to support an assurance claim.
 
-The **AI Container Assurance Level (AI-CAL 0-6)** framework shifts the paradigm from behavioral trust to **physical network and supply chain isolation**. 
+The core question: **If an agent or a control inside one zone is compromised, what can the agent still reach, and what keeps the failure from spreading?**
 
-This repository introduces the baseline architecture for **AI-CAL 4.5 (The Hybrid Balance Approach)**. It provides a blueprint for deploying high-risk or hostile autonomous agents on-premises, treating model-to-package handoffs as dangerous, untrusted supply chain vectors.
+## Current release: AI-CAL v2.0
 
-### 🛡️ Core Architectural Pillars (AI-CAL 4.5)
-The architecture isolates the execution runtime from core artifact repositories (such as JFrog) using physical-layer and cryptographic constraints:
+**November 2026** · [View the AI-CAL v2.0 framework PDF](./AI-CAL_Agent_Containment_Framework_v2.0_2026-11.pdf)
 
-*   **Cryptographic & Network Cordoning:** Every agent workload is bounded within a 4-firewall Ring function) and zone, authenticated strictly via **F5 mTLS** to ensure un-spoofable workload identity and throttle rate control.
-*   **Zero-Feedback Information Starvation:** An internal gateway using **Apache Camel hosts** manages message state and enforces mathematically strict JSON schema boundaries (sizing, field limits). Payloads violating these rules are silently dropped. By eliminating error codes (e.g., HTTP 400) and stack traces, the agent is starved of the feedback loop required for recursive debugging and exploit pivoting.
-*   **Asymmetric Out-of-Band Agent-to-Model Messaging:** Agents are strictly prohibited from maintaining open-ended, persistent network connections to the underlying LLM models. Instead, all agent-to-model messaging is routed through a highly scalable, asynchronous Apache Camel orchestration layer. This decouples the communication flow, prevents continuous session-hijacking or interactive execution breakouts, and ensures every message transaction is discrete, inspected, and state-bound.
-*   **Asymmetric Out-of-Band Package Delivery:** Agents have **zero direct line-of-sight to JFrog**. Package requests trip an external, air-gapped like pipeline. **Jenkins** orchestrates a Managed File Transfer (**MFT**) host to push validated packages across a hardware-enforced **Owl Data Diode** into a completely separate, firewall-controlled zone hosting an SSH-key secured SFTP mail drop.
-*   **Cascading Swarm Collapse:** If an agent attempts to flood or swarm its container, it trips a physical circuit breaker at the Camel/Jenkins orchestration layer. This completely cuts off the package lifeline, inducing a controlled, simultaneous failure of the entire local swarm before cross-zone persistence can occur.
-*   **Out-of-Band Forensic Monitoring and Auditing:** Total visibility is maintained via fully out-of-band network taps, Intrusion Detection Systems (IDS), and SIEM integration. Crucially, this pipeline operates independently of the agent runtime plane to prevent logs from being tampered with or falsified by a compromised swarm. Beyond real-time alerting, this out-of-band system acts as an immutable forensic recorder, capturing exact agent trajectories and execution logs to facilitate post-incident root-cause analysis and structural lessons learned.
+**SHA-256:** `ba8b916d0b883847ab25993c0608757effbc2a8e4949e022eb82dec5217f5ba2`
 
-**Author:** Patrick Shannon
+The versioned PDF is the authoritative release artifact. Compare its SHA-256 digest with the value above to verify the downloaded file. See [GitHub Releases](https://github.com/pshannon011/AI-CAL-Containment-Assurance-Framework/releases) for release history.
 
-Github link: https://github.com/pshannon011/AI-CAL-Containment-Assurance-Framework
+## Containment assurance levels and reference architecture
 
-## 📅 Version History & Artifact Integrity
+AI-CAL proposes containment assurance levels from **0 to 6**. The appropriate level depends on the workload, its exposure, and the consequences of a failure. The framework uses **AI-CAL 4.5** as an intermediate reference profile: separate physical host pools for agent execution and trusted mediation, narrowly authorized crossings, and hardware data diodes for defined one-way paths.
 
-**Current Release:** Version v1.0 Initial public release.
+The v2.0 reference architecture defines:
 
-**Release Date:** September 2026  
+- **Containment rings and tollgates.** Each crossing permits only an approved operation. Where a protocol break is required, the receiving side starts a separate, authenticated exchange. Assess shared administration and other dependencies before counting two boundaries as independent.
+- **Brokered model access.** F5 terminates the agent's mutual TLS (mTLS) session. Apache Camel #2 records admission before F5 releases the request; Camel #1 verifies the signed request after the forward transfer. Camel #2 verifies the signed model result and binds it to the original agent and transaction before release.
+- **Controlled package delivery.** Agents request packages through an approved catalog. Jenkins and JFrog handle acquisition; managed file transfer (MFT) sends approved artifacts through a separately governed one-way service to a scoped SFTP landing. Pickup uses SSH public-key authentication only. Per-agent mailboxes on a shared host do not establish containment if that host can modify or relay files across cells.
+- **Fail-closed enforcement and monitoring.** Block forwarding when required admission or verification is unavailable. Define how to stop active and queued work, and use independent monitoring to assess whether each boundary and cutoff worked.
 
-**Framework Document:** `AI-CAL_Agent_Containment_Framework_v1.0_2026-09.pdf`  
+## Verification and related security guidance
 
-**Hash integrity SHA-256:** `d88e9eae0cac725321fa85b8591c2d3c34307e7c6570ffca5900ea0394221a92`
+AI-CAL distinguishes the containment required for a workload from the level and capacity demonstrated by a deployment. Version 2.0 shows how the CSA AI Controls Matrix (AICM) and OWASP AISVS can inform control selection and verification tests. It also identifies CSA STAR for AI self-assessments as a source for reviewing which controls a provider reports for a hosted service and who is responsible for them. For example, test that a tool broker denies actions outside the agent's authorization, then check that the agent has no direct path to the tool.
 
---------------------------
-**Current Release:** Version v1.0 Initial public release.
+The reference architecture is conceptual. A limited prototype exercised part of the F5 and Camel message sequence with simulated components. A deployment claim requires evidence for the actual boundaries, shared dependencies, failure conditions, and workload capacity.
 
-**Release Date:** October 2026  
+## Previous release
 
-**Companion Visio Diagram:** `AI-CAL_On_Prem_Layout_diagram_v1.0_2026_10_01.pdf`  
+- [AI-CAL v1.0 framework PDF](./AI-CAL_Agent_Containment_Framework_v1.0_2026-09.pdf) · September 2026
+- **SHA-256:** `d88e9eae0cac725321fa85b8591c2d3c34307e7c6570ffca5900ea0394221a92`
+- [GitHub release v1.0.1](https://github.com/pshannon011/AI-CAL-Containment-Assurance-Framework/releases/tag/v1.0.1) · [Zenodo record for the earlier publication](https://doi.org/10.5281/zenodo.22925685)
 
-**Hash integrity SHA-256:** `c56af580ecb9a0bda3567c6a5e7341106b14a3f89adae9ff96d5e9d6c4a0cfc0`
+## Companion materials
 
---------------------------
-**Current Release:** Version v1.0 Initial public release.
+These diagrams and slide decks retain their original versions and publication dates. Use the v2.0 framework PDF for the current requirements.
 
-**Release Date:** October 2026  
+| Artifact | Date | SHA-256 |
+| --- | --- | --- |
+| [On-premises containment architecture diagram v1.0](./AI-CAL_Agent_On_Prem_Layout_diagram_v1.0_2026_10_01.pdf) | October 2026 | `c56af580ecb9a0bda3567c6a5e7341106b14a3f89adae9ff96d5e9d6c4a0cfc0` |
+| [Containment diagram walkthrough v1.0](./AI_CAL_Containment_Diagram_Presentation_v1.0_2026_10_08.pdf) | October 2026 | `55cb65caac22b4114509793eaf0b3899ac170d69605a54fb54d00e231af33a69` |
+| [AI-CAL controls presentation v1.0](./AI-CAL_controls_presentation_v1.0_2026-11.pdf) | November 2026 | `cb4f67ed4f85272935077f8c39af9777e560b9db3b7562e72ae06f1aacb16d00` |
 
-**Companion Diagram walkthrough PowerPoint Presentation:** `AI_CAL_Containment_Diagram_Presentation_v1.0_2026_10_08.pdf`
+## License
 
-**Hash integrity SHA-256:** `55cb65caac22b4114509793eaf0b3899ac170d69605a54fb54d00e231af33a69`
+© 2026 Patrick Shannon. Licensed under the [Creative Commons Attribution 4.0 International License (CC BY 4.0)](./LICENSE). Reuse, redistribution, and adaptation are permitted with appropriate attribution.
 
---------------------------
-**Current Release:** Version v1.0 Initial public release.
+## About the author
 
-**Release Date:** November 2026  
+**Patrick Shannon** is a Principal Information Security Architect. He spent 16 years supporting global enterprise security architecture and design for GE Aerospace as a cybersecurity architecture consultant and subject matter expert.
 
-**AI-CAL Controls Slide deck companion presentation:** `AI-CAL_controls_presentation_v1.0_2026-11.pdf`
+**Certifications:** CISSP, CISA, CRISC, GPEN, GCLD, GISP, CDPSE, and GPPA (ret.).
 
-**Hash integrity SHA-256:** `cb4f67ed4f85272935077f8c39af9777e560b9db3b7562e72ae06f1aacb16d00`
-
---------------------------
-
-
-##License
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22925685.svg)](https://doi.org/10.5281/zenodo.22925685)
-
-© 2026 Patrick Shannon
-
-##This work is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
-
-Reuse, redistribution, and adaptation are permitted with appropriate attribution to Patrick Shannon.
-
-### Architectural Notes & Limitations
-
-The PDF is the authoritative release artifact.
-
-Future revisions will be published as separate versioned releases. Previous releases will remain available for reference and version history.
-
-* **Scale & Topology:** The AI-CAl (4.5) architecture is designed for horizontal scalability; the accompanying diagram illustrates a simplified multi-agent layout for clarity.
-* **Hybrid Extensibility:** While depicted here as an on-premises deployment, the orchestration pipeline (Jenkins/JFrog/MFT Sender) can be seamlessly deployed in a hybrid cloud configuration (e.g., AWS VPC via AWS Direct Connect) without altering the security posture.
-* **Threat Model & Containment:** High-risk/hostile autonomous agents require deterministic physical-layer containment. This framework mandates hardware-enforced unidirectional gateways (data diodes) rather than virtualized or software-defined isolation boundaries.
-* **Status:** This design is under active development and requires formal peer review and extensive validation testing prior to production deployment.
-* **Agent Message Request Canonical JSON Schema:** The precise structural specifications and canonical JSON definitions are currently undergoing active design and refinement. Input from AppSec and integration engineers is welcomed during the formal peer-review phase.
-
-The AI-CAL v2.0 framework will be released soon and is currently under review. 
-
-## 👨‍💻 About the Author
-
-**Patrick Shannon**  
-*Principal Information Security Architect*  
-Former Cybersecurity Architect Consultant & SME | 16 Years Global Enterprise Secure Architecture & Design for GE Aerospace
-
-### 🏅 Professional Certifications
-*   **CISSP** (Certified Information Systems Security Professional)
-*   **CISA** (Certified Information Systems Auditor)
-*   **CRISC** (Certified in Risk and Information Systems Control)
-*   **GPEN** (GIAC Penetration Tester)
-*   **GCLD** (GIAC Cloud Security Leadership)
-*   **GISP** (GIAC Information Security Professional)
-*   **CDPSE** (Certified Data Privacy Solutions Engineer)
-*   **GPPA (ret.)** (GIAC Certified Perimeter Protection Analyst)
-
-🔗 **Connect on LinkedIn:** [Patrick Shannon](https://www.linkedin.com/in/patrick-shannon-cissp-crisc-cisa-gisp-gpen-gcld-cdpse-b7726b2/)  
-🏅 **Verify Badges on Credly:** [Credly Profile](https://www.credly.com/users/patrick-shannon.d59e52e2/badges/credly)
+[Patrick Shannon on LinkedIn](https://www.linkedin.com/in/patrick-shannon-cissp-crisc-cisa-gisp-gpen-gcld-cdpse-b7726b2/) · [Verify professional badges on Credly](https://www.credly.com/users/patrick-shannon.d59e52e2/badges/credly)
