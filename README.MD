@@ -1,5 +1,7 @@
 # AI Containment Assurance Levels (AI-CAL)
 
+[![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24148602.svg)](https://doi.org/10.5281/zenodo.24148602)
+
 AI-CAL is an **AI agent containment framework and security reference architecture** for autonomous AI systems. It helps architects choose a containment level for a workload, design boundaries that limit what an agent can reach or do, and identify the evidence needed to support an assurance claim.
 
 The core question: **If an agent or a control inside one zone is compromised, what can the agent still reach, and what keeps the failure from spreading?**
